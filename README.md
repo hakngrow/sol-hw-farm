@@ -5,9 +5,24 @@ Yield farming is the concept of incentivizing users with passive income in excha
 ### Environment and Dependencies Setup
 
 Open up your code editor (I'm using [Visual Studio Code](https://code.visualstudio.com/)) and create a new directory for this project.
-
 ```
 mkdir hw-farm
 ```
+
+Install [Node js](https://nodejs.org/en/) if you do not have it.
+
+In the project directory, install the [Hardhat](https://hardhat.org/) module:
+```
+npm i --save-dev hardhat
+```
+
+Open up Hardhat with `npx hardhat`.
+
+![Create an empty Hardhat project](public/images/hardhat.jpg)
+
+Select the `Create an empty hardhat.config.js` option.
+
+
+
 
 
