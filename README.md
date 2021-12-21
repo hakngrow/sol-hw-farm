@@ -78,10 +78,28 @@ In the constructor, we assign the `DEFAULT_ADMIN_ROLE` to the creator of the con
 
 We will override the `mint()` function to enforce a check that the caller has the `MINTER` role.
 ```
-require(hasRole(MINTER_ROLE, msg.sender), "Caller is not the minter");
+pragma solidity 0.8.4;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract HWToken is ERC20, AccessControl {
+
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
+    constructor() ERC20("HWToken", "HWT") {
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    function mint(address to, uint256 amount) public {
+
+        require(hasRole(MINTER_ROLE, msg.sender), "Caller is not the minter");
+
+        _mint(to, amount);
+    }
+}
 ``` 
 
-The mint function allocates a specified number of tokens to a specified user address. Since we want to automate this process, we’re also including the transferOwnership() function to transfer ownership to the farm contract; therefore, only the contract itself can issue tokens.
 
 
 
