@@ -134,6 +134,7 @@ In our yield farming contract, there will be 3 core function. We need to allow u
 In the `contracts` folder, create a file `HWFarm.sol`.
 
 By now, your project structure should look somethings like this:
+
 ![Project Structure](/public/images/structure.jpg)
 
 In `HWFarm.sol`, import both the `HWToken` contract and OpenZeppelin’s `IERC20` contract. 
@@ -143,12 +144,11 @@ We declare the following state variable mappings:
 | --- | --- |
 | `stakingBalance` | Mapping of user address to the user staking balance  |
 | `isStaking` | Mapping of user address to the user staking status |
-| `startTime` | Mapping of user address to the start time of the most recent stake |
-| `hwBalance` | Mapping of user address to the reward `HWToken` balance |
+| `startTime` | Mapping of user address to the start time of the user most recent stake |
+| `hwBalance` | Mapping of user address to the user reward `HWToken` balance |
 
 
-We events for the 3 core functions for the front-end.
-
+We also define events for the 3 core functions for the front-end.
 ```
 pragma solidity 0.8.4;
 
