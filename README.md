@@ -133,7 +133,53 @@ In our yield farming contract, there will be 3 core function. We need to allow u
 
 In the `contracts` folder, create a file `HWFarm.sol`.
 
-In `HWFarm.sol`, import both the `HWToken` contract and OpenZeppelin’s `IERC20` contract. We also need to declare some state variable mappings and events for the front end. We’ll go over each aspect of the contract. First, let’s go over the constructor, state variables, and events.
+By now, your project structure should look somethings like this:
+![Project Structure](/public/images/structure.jpg)
+
+In `HWFarm.sol`, import both the `HWToken` contract and OpenZeppelin’s `IERC20` contract. 
+
+We also need to declare some state variable mappings and events for the front end. We’ll go over each aspect of the contract. First, let’s go over the constructor, state variables, and events.
+
+```
+pragma solidity 0.8.4;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./HWToken.sol";
+
+contract HWFarm {
+
+    // userAddress => stakingBalance
+    mapping(address => uint256) public stakingBalance;
+    // userAddress => isStaking boolean
+    mapping(address => bool) public isStaking;
+    // userAddress => timeStamp
+    mapping(address => uint256) public startTime;
+    // userAddress => hwBalance
+    mapping(address => uint256) public hwBalance;
+
+    string public name = "TokenFarm";
+
+    IERC20 public daiToken;
+    hwToken public hwToken;
+
+    event Stake(address indexed from, uint256 amount);
+    event Unstake(address indexed from, uint256 amount);
+    event YieldWithdraw(address indexed to, uint256 amount);
+
+    constructor(
+        IERC20 _daiToken,
+        HWToken _hwToken
+        ) {
+            daiToken = _daiToken;
+            hwToken = _hwToken;
+        }
+
+    /// Core function shells
+    stake() public {}
+    unstake() public {}
+    withdrawYield() public {}
+}
+```
 
 
 
