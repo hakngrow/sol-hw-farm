@@ -59,6 +59,29 @@ export default {
 
 ### Contracts
 
+#### 1. ERC20 HWToken Contract
+
+In this tutorial, we will rewards users with HWTokens for staking the MockDai tokens.  The `HW` are just my initials, you can change them to whatever you like.
+
+In the project directory  `hw-farm`, create a `contracts` folder.  In the `contracts` folder, create a new Solidity file `HWToken.sol`.
+```
+mkdir contracts
+```
+
+To build the ERC20 HW token contract, import the `ERC20` contract from OpenZeppelin while also importing OpenZeppelin’s `AccessControl.sol` contract. 
+
+The `AccessControl` contract allows us to implement role-based access control mechanisms.  In our case, we only want users/contracts with the `MINTER` role to be able to mint new tokens.
+
+After declaring the imports, we define the `MINTER` role by using a `bytes32` identifier and exposed it in the external API using a `public constant` hash digest.
+
+In the constructor, we assign the `DEFAULT_ADMIN_ROLE` to the creator of the contract.
+
+We will override the `mint()` function to enforce a check that the caller has the `MINTER` role.
+```
+require(hasRole(MINTER_ROLE, msg.sender), "Caller is not the minter");
+``` 
+
+The mint function allocates a specified number of tokens to a specified user address. Since we want to automate this process, we’re also including the transferOwnership() function to transfer ownership to the farm contract; therefore, only the contract itself can issue tokens.
 
 
 
