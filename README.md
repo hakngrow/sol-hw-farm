@@ -2,7 +2,7 @@
 
 Yield farming is the concept of incentivizing users with passive income in exchange for providing liquidity. The first step in yield farming involves adding funds to a liquidity pool, which are essentially smart contracts that contain funds. These pools provide liquidity to a marketplace where users can exchange, borrow, or lend tokens. Once you’ve added your funds to a pool, you’ve officially become a liquidity provider. In return for staking your finds in the pool, you’ll be rewarded with fees generated from the underlying DeFi platform. Reward tokens themselves can also be deposited in liquidity pools, and it’s common practice for people to shift their funds between different protocols to chase higher yields.
 
-### Environment and Dependencies Setup
+### 1. Environment and Dependencies Setup
 
 Open up your code editor (I'm using [Visual Studio Code](https://code.visualstudio.com/)) and create a new directory for this project.
 ```
@@ -57,9 +57,9 @@ export default {
 };
 ```
 
-### Contracts
+### 2. Contracts
 
-#### 1. ERC20 HWToken Contract
+#### 2.1 ERC20 HWToken Contract
 
 In this tutorial, we will rewards users with HWTokens for staking the MockDai tokens.  The `HW` are just my initials, you can change them to whatever you like.
 
@@ -100,7 +100,7 @@ contract HWToken is ERC20, AccessControl {
 }
 ``` 
 
-#### 2. MockERC20 Contract
+#### 2.2 MockERC20 Contract
 
 In our yield farming contract, users will be staking `MockERC20` tokens, to receive passive `HWToken` rewards. We named our staking token `MockDai`, but you can use any name you wish by using parameters in the constructor.
 
@@ -127,7 +127,7 @@ contract MockERC20 is ERC20 {
 }
 ```
 
-#### 3. HWFarm Contract
+#### 2.3 HWFarm Contract
 
 In our yield farming contract, there will be 3 core function. We need to allow users to stake their funds, unstake their funds, and withdraw their yield. 
 
@@ -200,10 +200,25 @@ Declare state variables preceded with the type (i.e. `IERC20`, `HWToken`) and vi
     HWToken public hwToken;
 ```
 
-Use the following convention to :
+Use the following convention in our contracts:
 - Type - Use PascalCasing
 - State Declaration - Use camelCasing
 - Constructor Parameter - Use _underscoreCamelCasing
+
+### 3. Core Functions
+
+#### 3.1 Staking
+
+The `stake()` function first requires that the `amount` parameter is greater than 0 and that the user holds enough DAI to cover the transaction. 
+
+The function then checks if the user already staked DAI. If so, the contract adds the unrealized yield to the `hwBalance`. This ensures the accrued yield is not loss. 
+
+Then contract then calls the `IERC20` `transferFrom` function. The user first must approve the contract’s request to move their funds. 
+
+The function then updates the `stakingBalance`, `startTime`, and `isStaking` mappings to reflect the new staking.
+
+Finally, it emits the `Stake` event to allow the front-end to listen for the said event.
+
 
 
 
