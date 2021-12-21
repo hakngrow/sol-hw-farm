@@ -32,7 +32,7 @@ For testing, install the dependencies for [Chai](https://www.chaijs.com/):
 npm i --save-dev chai @types/node @types/mocha @types/chai
 ```
 
-We’ll be using an ERC20 token as both the staking token and as the yield rewarded to users [OpenZeppelin](https://openzeppelin.com/) hosts various contract libraries for developers. They also offer excellent testing tools. Install the dependencies for contracts and testing tools:
+We’ll be using an ERC20 token as both the staking token and as the yield rewarded to users. [OpenZeppelin](https://openzeppelin.com/) offers various contract libraries for developers. They also offer excellent testing tools. Install the dependencies for contracts and testing tools:
 ```
 npm i --save-dev @openzeppelin/contracts @openzeppelin/test-helpers
 ```
@@ -56,6 +56,9 @@ export default {
   solidity: "0.8.4",
 };
 ```
+
+### Contracts
+
 
 
 
