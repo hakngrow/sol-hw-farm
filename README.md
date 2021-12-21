@@ -138,7 +138,16 @@ By now, your project structure should look somethings like this:
 
 In `HWFarm.sol`, import both the `HWToken` contract and OpenZeppelin’s `IERC20` contract. 
 
-We also need to declare some state variable mappings and events for the front end. We’ll go over each aspect of the contract. First, let’s go over the constructor, state variables, and events.
+We declare the following state variable mappings:
+| Variable | Purpose | 
+| --- | --- |
+| `stakingBalance` | Mapping of user address to the user staking balance  |
+| `isStaking` | Mapping of user address to the user staking status |
+| `startTime` | Mapping of user address to the start time of the most recent stake |
+| `hwBalance` | Mapping of user address to the reward `HWToken` balance |
+
+
+We events for the 3 core functions for the front-end.
 
 ```
 pragma solidity 0.8.4;
