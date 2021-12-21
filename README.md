@@ -142,11 +142,10 @@ In `HWFarm.sol`, import both the `HWToken` contract and OpenZeppelin’s `IERC20
 We declare the following state variable mappings:
 | Variable | Purpose | 
 | --- | --- |
-| `stakingBalance` | Mapping of user address to the user staking balance  |
+| `stakingBalance` | Mapping of user address to the user staking balance (MockDai) |
 | `isStaking` | Mapping of user address to the user staking status |
-| `startTime` | Mapping of user address to the start time of the user most recent stake |
+| `startTime` | Mapping of user address to the timestamp of the user most recent stake. Use to calculate the yield of a users' staking.  |
 | `hwBalance` | Mapping of user address to the user reward `HWToken` balance |
-
 
 We also define events for the 3 core functions for the front-end.
 ```
@@ -189,6 +188,22 @@ contract HWFarm {
     withdrawYield() public {}
 }
 ```
+
+Declare a `name` variable to identify the contract.
+```
+    string public name = "HW Farm";
+```
+
+Declare state variables preceded with the type (i.e. `IERC20`, `HWToken`) and visibility (public).
+```
+    IERC20 public daiToken;
+    HWToken public hwToken;
+```
+
+Use the following convention to :
+- Type - Use PascalCasing
+- State Declaration - Use camelCasing
+- Constructor Parameter - Use _underscoreCamelCasing
 
 
 
