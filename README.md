@@ -209,7 +209,7 @@ Use the following convention in our contracts:
 
 #### 3.1 Staking
 
-The `stake()` function first requires that the `amount` parameter is greater than 0 and that the user holds enough DAI to cover the transaction. 
+The `stake()` function first requires that the `amount` parameter is greater than 0 and that the user holds enough mock DAI for the transaction. 
 
 The function then checks if the user already staked DAI. If so, the contract adds the unrealized yield to the `hwBalance`. This ensures the accrued yield is not loss. 
 
@@ -218,6 +218,34 @@ Then contract then calls the `IERC20` `transferFrom` function. The user first mu
 The function then updates the `stakingBalance`, `startTime`, and `isStaking` mappings to reflect the new staking.
 
 Finally, it emits the `Stake` event to allow the front-end to listen for the said event.
+
+```
+function stake(uint256 amount) public {
+    require(
+        amount > 0 && daiToken.balanceOf(msg.sender) >= amount, 
+        "You cannot stake zero tokens");
+        
+    if(isStaking[msg.sender] == true){
+        uint256 toTransfer = calculateYieldTotal(msg.sender);
+        hwBalance[msg.sender] += toTransfer;
+    }
+
+    daiToken.transferFrom(msg.sender, address(this), amount);
+    stakingBalance[msg.sender] += amount;
+    startTime[msg.sender] = block.timestamp;
+    isStaking[msg.sender] = true;
+
+    emit Stake(msg.sender, amount);
+}
+```
+
+#### 3.2 Unstaking
+
+The `unstake()` function requires the `isStaking` mapping to equate to true (which only happens when the stake function is called) and requires that the requested amount to unstake isn’t greater than the user’s staked balance. 
+
+I declared a local toTransfer variable equal to the calculateYieldTotal function (more on this function later) in order to ease my tests (the latency gave me problems in checking balances). Thereafter, we follow the checks-effects-transactions pattern by setting balanceTransfer to equal the amount and then setting the amount to 0. This prevents users from abusing the function with re-entrancy.
+Further, the logic updates the stakingBalance mapping and transfers the DAI back to the user. Next, the logic updates the pmknBalance mapping. This mapping constitutes the user’s unrealized yield; therefore, if the user already held an unrealized yield balance, the new balance includes the prior balance with the current balance (again, more on this in the calculateYieldTotal section). Finally, we include a conditional statement that checks whether the user still holds staking funds. If the user does not, the isStaking mapping points to false.
+*I should also note that Solidity version >= 0.8.0 includes SafeMath already integrated. If you’re using Solidity < 0.8.0, I highly encourage you to use a SafeMath library to prevent overflows.
 
 
 
