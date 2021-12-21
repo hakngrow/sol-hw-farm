@@ -100,7 +100,40 @@ contract HWToken is ERC20, AccessControl {
 }
 ``` 
 
+#### 2. MockERC20 Contract
 
+In our yield farming contract, users will be staking `MockERC20` tokens, to receive passive `HWToken` rewards. We named our staking token `MockDai`, but you can use any name you wish by using parameters in the constructor.
+
+In the `contracts` folder, create a `mocks` folder.
+
+In the `mocks` folder, create a new file `MockERC20.sol`.
+
+Import OpenZeppelin’s `ERC20.sol` contract, and input the following:
+```
+pragma solidity 0.8.4;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract MockERC20 is ERC20 {
+
+    constructor(
+        string memory name,
+        string memory ticker
+    ) ERC20(name, ticker) {}
+
+    function mint(address to, uint256 amount) public {
+        _mint(to, amount);
+    }
+}
+```
+
+#### 3. HWFarm Contract
+
+In our yield farming contract, there will be 3 core function. We need to allow users to stake their funds, unstake their funds, and withdraw their yield. 
+
+In the `contracts` folder, create a file `HWFarm.sol`.
+
+In `HWFarm.sol`, import both the `HWToken` contract and OpenZeppelin’s `IERC20` contract. We also need to declare some state variable mappings and events for the front end. We’ll go over each aspect of the contract. First, let’s go over the constructor, state variables, and events.
 
 
 
