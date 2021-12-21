@@ -241,11 +241,19 @@ function stake(uint256 amount) public {
 
 #### 3.2 Unstaking
 
-The `unstake()` function requires the `isStaking` mapping to equate to true (which only happens when the stake function is called) and requires that the requested amount to unstake isn’t greater than the user’s staked balance. 
+The `unstake()` function requires the `isStaking` mapping to equate to true (which only happens when the `stake` function is previously called) and requires that the requested amount to unstake isn’t greater than the user’s staked balance. 
 
-I declared a local toTransfer variable equal to the calculateYieldTotal function (more on this function later) in order to ease my tests (the latency gave me problems in checking balances). Thereafter, we follow the checks-effects-transactions pattern by setting balanceTransfer to equal the amount and then setting the amount to 0. This prevents users from abusing the function with re-entrancy.
-Further, the logic updates the stakingBalance mapping and transfers the DAI back to the user. Next, the logic updates the pmknBalance mapping. This mapping constitutes the user’s unrealized yield; therefore, if the user already held an unrealized yield balance, the new balance includes the prior balance with the current balance (again, more on this in the calculateYieldTotal section). Finally, we include a conditional statement that checks whether the user still holds staking funds. If the user does not, the isStaking mapping points to false.
-*I should also note that Solidity version >= 0.8.0 includes SafeMath already integrated. If you’re using Solidity < 0.8.0, I highly encourage you to use a SafeMath library to prevent overflows.
+We get the yield from previous staking by calling the `calculateYieldTotal` function and storing the result in `yieldTransfer`.
+
+Then we follow the [checks-effects-interactions](https://docs.soliditylang.org/en/v0.6.11/security-considerations.html) pattern by setting `balanceTransfer` to equal the `amount` to unstake and setting the `amount` to 0. This prevents users from abusing the function with re-entrancy.
+
+We then reduce the `stakingBalance` mapping and transfer the mock DAI back to the user. 
+
+Next, we update the `hwBalance` mapping. This mapping constitutes the user’s unrealized yield; therefore, if the user already held an unrealized yield balance, the new balance includes the prior balance with the current balance. 
+
+Finally, we check whether the user still has staking tokens in the contract. If the user does not, the `isStaking` mapping is set to `false`.
+
+> Note that Solidity version >= 0.8.0 includes `SafeMath` already integrated. If you’re using Solidity < 0.8.0, I highly encourage you to use a `SafeMath` library to prevent overflows.
 
 
 

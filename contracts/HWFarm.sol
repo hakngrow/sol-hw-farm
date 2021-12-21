@@ -60,7 +60,7 @@ contract HWFarm {
 
         uint256 yieldTransfer = calculateYieldTotal(msg.sender);
 
-        startTime[msg.sender] = block.timestamp; // bug fix
+        startTime[msg.sender] = block.timestamp;
         uint256 balanceTransfer = amount;
         amount = 0;
         stakingBalance[msg.sender] -= balanceTransfer;
