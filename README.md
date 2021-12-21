@@ -255,6 +255,35 @@ Finally, we check whether the user still has staking tokens in the contract. If 
 
 > Note that Solidity version >= 0.8.0 includes `SafeMath` already integrated. If you’re using Solidity < 0.8.0, I highly encourage you to use a `SafeMath` library to prevent overflows.
 
+```
+function unstake(uint256 amount) public {
+    require(
+        isStaking[msg.sender] = true &&
+        stakingBalance[msg.sender] >= amount, 
+        "Nothing to unstake"
+    );
+
+    uint256 yieldTransfer = calculateYieldTotal(msg.sender);
+
+    startTime[msg.sender] = block.timestamp;
+    uint256 balanceTransfer = amount;
+    amount = 0;
+    stakingBalance[msg.sender] -= balanceTransfer;
+    daiToken.transfer(msg.sender, balanceTransfer);
+    hwBalance[msg.sender] += yieldTransfer;
+
+    if(stakingBalance[msg.sender] == 0){
+        isStaking[msg.sender] = false;
+    }
+
+    emit Unstake(msg.sender, amount);
+}
+```
+
+#### 3.3 Withdrawing Yield
+
+
+
 
 
 
