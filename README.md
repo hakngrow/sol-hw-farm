@@ -282,7 +282,15 @@ function unstake(uint256 amount) public {
 
 #### 3.3 Withdrawing Yield
 
+The `withdrawYield()` function requires that either the `calculateYieldTotal` function or the reward `HWToken` `hwBalance` holds a balance for the user. 
 
+If there is a balance, this means that the user staked mock DAI more than once. The contract then adds the old `hwBalance` to the running yield total we received from the `calculateYieldTotal`. 
+
+> Notice that the contract follows the checks-effects-interactions pattern; where `oldBalance` is assigned the accured `hwBalance`. Immediately thereafter, `hwBalance` is set to zero (to prevent re-entrancy). 
+
+The `startTime` is set to the current timestamp in order to reset the accruing yield. 
+
+Finally, the contract evokes the `hwToken.mint()` function which transfers `HWToken` directly to the user.
 
 
 
