@@ -75,3 +75,6 @@ typings/
 # FuseBox cache
 .fusebox/
 node_modules
+
+# VS Code
+.vscode
