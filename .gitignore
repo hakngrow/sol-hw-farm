@@ -76,5 +76,6 @@ typings/
 .fusebox/
 node_modules
 
-# VS Code
-.vscode
+# Hardhat
+.artifacts
+.cache
