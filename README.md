@@ -290,10 +290,67 @@ If there is a balance, this means that the user staked mock DAI more than once. 
 
 The `startTime` is set to the current timestamp in order to reset the accruing yield. 
 
-Finally, the contract evokes the `hwToken.mint()` function which transfers `HWToken` directly to the user.
+Finally, the contract evokes the `hwToken.mint()` function which transfers the reward `HWToken` directly to the user.
 
+```
+function withdrawYield() public {
+        
+    uint256 toTransfer = calculateYieldTotal(msg.sender);
 
+    require(
+        toTransfer > 0 ||
+        hwBalance[msg.sender] > 0,
+        "Nothing to withdraw"
+    );
+        
+    if(hwBalance[msg.sender] != 0){
+        uint256 oldBalance = hwBalance[msg.sender];
+        hwBalance[msg.sender] = 0;
+        toTransfer += oldBalance;
+    }
 
+    startTime[msg.sender] = block.timestamp;
+    hwToken.mint(msg.sender, toTransfer);
+    
+    emit YieldWithdraw(msg.sender, toTransfer);
+}
+```
 
+#### 3.4 Helper Functions
 
+The `calculateYieldTime()` function return the time elapsed since a user's most recent stake.  It subtracts the `startTime` timestamp by the current timestamp to derive the time that should be used in the calculation of the user's yield. 
+```
+function calculateYieldTime(address user) public view returns(uint256){
+    uint256 end = block.timestamp;
+    uint256 totalTime = end - startTime[user];
+    return totalTime;
+}
+```
 
+The `calculateYieldTotal()` function takes the return value from the `calculateYieldTime` function and multiplies it by 10¹⁸. 
+
+> This is necessary as Solidity does not handle floating point or fractional numbers. By returning the timestamp difference as a BigNumber, Solidity can provide much more precision. 
+
+The `rate` variable equates to 86,400 which equals the number of seconds in a single day. 
+
+The calclated yield is such that the user receives 100% of their staked mock DAI quantity every 24 hours in `HWToken`s. 
+
+The `time` variable is divided by the hardcoded rate (86400). The resulting quotient is multiplied by the mock DAI staking balance of the user and subsequently divided by 10¹⁸. 
+
+> In a more traditional yield farm, the rate is a factor of the user’s staked percentage of the pool instead of time.
+
+```
+function calculateYieldTotal(address user) public view returns(uint256) {
+    uint256 time = calculateYieldTime(user) * 10**18;
+    uint256 rate = 86400;
+    uint256 timeRate = time / rate;
+    uint256 rawYield = (stakingBalance[user] * timeRate) / 10**18;
+    return rawYield;
+} 
+```
+
+### 4. Testing Using Hardhat and Chai
+
+Taking the time to create tests early on saves you (and/or your team) from future technical debt. I’d like to suggest testing your code as you write it. Unit testing functions as you write them can save you a ton of time refactoring in the future.
+
+To be continued...
